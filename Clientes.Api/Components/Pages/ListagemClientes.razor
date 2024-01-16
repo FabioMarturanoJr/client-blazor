@@ -1,0 +1,103 @@
+﻿@page "/"
+@using Clientes.Api.Domain.Filters
+@using Clientes.Api.Domain.Model
+@using Clientes.Api.Service
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using System.Text.Json.Serialization
+@using Newtonsoft.Json
+@rendermode InteractiveServer
+@inject IClienteService clientService
+
+<PageTitle>ListagemClientes</PageTitle>
+
+<div>
+    <p>
+        Consulte os seus Clientes cadastrados na
+        sua Loja ou realize o cadastro de novos Cliente.
+    </p>
+    <button class="btn btn-primary">Adicionar Cliente</button>
+</div>
+<br />
+<button class="btn btn-secondary" @onclick="MostrarResetarFiltros">Filtrar</button>
+<br />
+
+@if (filtros)
+{
+    <EditForm Model="@ModelFiltros" OnSubmit="@Filtrar">
+        <InputText Placeholder="Nome ou Razão Social do Cliente" @bind-Value="ModelFiltros.NomeRazao" />
+        <InputText Placeholder="E-mail do Cliente" @bind-Value="ModelFiltros.Email" />
+        <InputText Placeholder="Telefone do Cliente" @bind-Value="ModelFiltros.Telefone" />
+        <DateRangePicker 
+            class="form-control form-control-sm" 
+            @bind-StartDate="ModelFiltros.DataCadastroInicio" 
+            @bind-EndDate="ModelFiltros.DataCadastroFim" 
+            placeholder="Selecione uma data ou período" />
+        <label>
+            Cliente Bloqueado
+            <InputSelect @bind-Value="ModelFiltros.Bloqueado">
+                <option value=false>Não</option>
+                <option value=true>Sim</option>
+            </InputSelect>
+        </label>
+        <br />
+        <button class="btn btn-secondary" @onclick="limparFiltros">limpar filtros</button>
+        <input type="submit" class="btn btn-secondary" value="Aplicar Filtros" />
+    </EditForm>
+}
+
+<QuickGrid Items="Clientes.AsQueryable()" Pagination="pagination">
+    <PropertyColumn Property="c => c.NomeRazao"></PropertyColumn>
+    <PropertyColumn Property="c => c.Email"></PropertyColumn>
+    <PropertyColumn Property="c => c.Telefone"></PropertyColumn>
+    <PropertyColumn Property="c => c.DataCadastro"></PropertyColumn>
+    <TemplateColumn Title="Bloqueado">
+        <div>
+            <input type="checkbox" checked="@context.Bloqueado" disabled />
+        </div>
+    </TemplateColumn>
+    <TemplateColumn Title="Acões">
+        <button class="btn btn-primary">Editar</button>
+    </TemplateColumn>
+</QuickGrid>
+
+<Paginator State="pagination"></Paginator>
+
+@code {
+    // public bool TodosClientesSelecionados;
+    PaginationState pagination = new PaginationState { ItemsPerPage = 20 };
+    public bool filtros;
+    public List<Cliente> Clientes= new();
+    public void MostrarResetarFiltros()
+    {
+        limparFiltros();
+        filtros = !filtros;
+    }
+    public void limparFiltros()
+    {
+        ModelFiltros.NomeRazao = null;
+        ModelFiltros.Email = null;
+        ModelFiltros.Telefone = null;
+        ModelFiltros.DataCadastroInicio = null;
+        ModelFiltros.DataCadastroFim = null;
+        ModelFiltros.Bloqueado = null;
+    }
+    public void Filtrar()
+    {
+        CarregarDados();
+        filtros = !filtros;
+    }
+    public ClienteFiltros ModelFiltros { get; set; } = new ClienteFiltros();
+    public void CarregarDados()
+    {
+        var clientes = clientService.ListarClientes(ModelFiltros);
+        if (clientes != null)
+        {
+            Clientes = clientes;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        CarregarDados();
+    }
+}
