@@ -30,6 +30,15 @@ namespace Clientes.Api.Service
                 query = query.Where(c => c.Bloqueado == clienteFiltros.Bloqueado);
             }
 
+            if (clienteFiltros.DataCadastroInicio != null)
+            {
+                query = query.Where(c => c.DataCadastro >= clienteFiltros.DataCadastroInicio);
+            }
+
+            if (clienteFiltros.DataCadastroFim != null)
+            {
+                query = query.Where(c => c.DataCadastro <= clienteFiltros.DataCadastroFim);
+            }
             return [.. query];
         }
     }

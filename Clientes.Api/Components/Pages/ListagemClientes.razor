@@ -18,7 +18,7 @@
     <button class="btn btn-primary">Adicionar Cliente</button>
 </div>
 <br />
-<button class="btn btn-secondary" @onclick="MostrarResetarFiltros">Filtrar</button>
+<button class="btn btn-secondary" @onclick="MostrarFiltros">Filtrar</button>
 <br />
 
 @if (filtros)
@@ -67,9 +67,8 @@
     PaginationState pagination = new PaginationState { ItemsPerPage = 20 };
     public bool filtros;
     public List<Cliente> Clientes= new();
-    public void MostrarResetarFiltros()
+    public void MostrarFiltros()
     {
-        limparFiltros();
         filtros = !filtros;
     }
     public void limparFiltros()
@@ -84,7 +83,7 @@
     public void Filtrar()
     {
         CarregarDados();
-        filtros = !filtros;
+        MostrarFiltros();
     }
     public ClienteFiltros ModelFiltros { get; set; } = new ClienteFiltros();
     public void CarregarDados()
