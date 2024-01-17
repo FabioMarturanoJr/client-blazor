@@ -15,11 +15,14 @@
         Consulte os seus Clientes cadastrados na
         sua Loja ou realize o cadastro de novos Cliente.
     </p>
-    <button class="btn btn-primary">Adicionar Cliente</button>
+    <NavLink class="btn btn-primary" href="cadastrarCliente">
+        Adicionar Cliente
+    </NavLink>
 </div>
 <br />
 <button class="btn btn-secondary" @onclick="MostrarFiltros">Filtrar</button>
 <br />
+
 
 @if (filtros)
 {
@@ -63,15 +66,14 @@
 <Paginator State="pagination"></Paginator>
 
 @code {
-    // public bool TodosClientesSelecionados;
     PaginationState pagination = new PaginationState { ItemsPerPage = 20 };
-    public bool filtros;
-    public List<Cliente> Clientes= new();
-    public void MostrarFiltros()
+    private bool filtros;
+    private List<Cliente> Clientes = new();
+    private void MostrarFiltros()
     {
         filtros = !filtros;
     }
-    public void limparFiltros()
+    private void limparFiltros()
     {
         ModelFiltros.NomeRazao = null;
         ModelFiltros.Email = null;
@@ -80,13 +82,13 @@
         ModelFiltros.DataCadastroFim = null;
         ModelFiltros.Bloqueado = null;
     }
-    public void Filtrar()
+    private void Filtrar()
     {
         CarregarDados();
         MostrarFiltros();
     }
-    public ClienteFiltros ModelFiltros { get; set; } = new ClienteFiltros();
-    public void CarregarDados()
+    private ClienteFiltros ModelFiltros { get; set; } = new ClienteFiltros();
+    private void CarregarDados()
     {
         var clientes = clientService.ListarClientes(ModelFiltros);
         if (clientes != null)
