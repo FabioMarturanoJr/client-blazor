@@ -6,11 +6,22 @@
 
 @inject IClienteService clientService
 @inject NavigationManager NavigationManager
+@inject IToastService toastService
 
+@using Blazored.Toast.Configuration
 @using Blazored.FluentValidation
 @using BlazorInputMask
+@using Newtonsoft.Json
+@using System.Text
 
 @rendermode InteractiveServer
+
+<BlazoredToasts Position="ToastPosition.TopRight"
+                Timeout="10"
+                IconType="IconType.Material"
+                SuccessIcon="done_outline"
+                WarningIcon="warning"
+                ShowProgressBar="true" />
 
 <h2>Cadastro de Clientes</h2>
 
@@ -121,21 +132,24 @@
 
     private void AdicionarCliente()
     {
-
         try
         {
             clientService.CadastraCliente(ClienteModel);
             NavigationManager.NavigateTo("/");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            
-            throw;
+            if (ex.Message.Contains("ErroCadastro"))
+            {
+                var jsonErroString = ex.Message.Split(";")[1..];
+                var errors = JsonConvert.DeserializeObject<List<string>>(jsonErroString[0]);
+                foreach (var error in errors!)
+                {
+                    toastService.ShowError(Encoding.UTF8.GetString(Encoding.Default.GetBytes(error)));
+                }
+            }
         }
-
     }
-
-
 }
 
 

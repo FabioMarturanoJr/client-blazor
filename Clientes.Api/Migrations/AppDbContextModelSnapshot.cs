@@ -48,10 +48,10 @@ namespace Clientes.Api.Migrations
                     b.Property<string>("InscricaoEstadual")
                         .HasColumnType("longtext");
 
-                    b.Property<bool?>("InscricaoEstadualPessoaFisica")
+                    b.Property<bool>("InscricaoEstadualPessoaFisica")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool?>("Isento")
+                    b.Property<bool>("Isento")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("NomeRazao")

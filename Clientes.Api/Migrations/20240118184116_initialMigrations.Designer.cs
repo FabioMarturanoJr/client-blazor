@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clientes.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240118152248_initialMigrations")]
+    [Migration("20240118184116_initialMigrations")]
     partial class initialMigrations
     {
         /// <inheritdoc />
@@ -51,10 +51,10 @@ namespace Clientes.Api.Migrations
                     b.Property<string>("InscricaoEstadual")
                         .HasColumnType("longtext");
 
-                    b.Property<bool?>("InscricaoEstadualPessoaFisica")
+                    b.Property<bool>("InscricaoEstadualPessoaFisica")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool?>("Isento")
+                    b.Property<bool>("Isento")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("NomeRazao")

@@ -1,7 +1,9 @@
 ﻿using Clientes.Api.Domain.Dto;
+using Clientes.Api.Domain.Enum;
 using Clientes.Api.Domain.Filters;
 using Clientes.Api.Domain.Model;
 using Clientes.Api.Infrastructure;
+using System.Text.Json;
 
 namespace Clientes.Api.Service
 {
@@ -76,7 +78,33 @@ namespace Clientes.Api.Service
 
         public void CadastraCliente(CreateClienteDto clienteDto)
         {
-            _appDbContext.Clientes.Add((Cliente)clienteDto);
+            var erros = new List<string>();
+            var clienteModel = (Cliente)clienteDto;
+
+            if (ExisteEmail(clienteModel.Email))
+            {
+                erros.Add("Este e-mail já está cadastrado para outro Cliente");
+            }
+
+            if (ExisteCpfCnpj(clienteModel.CpfCnpj))
+            {
+                erros.Add("Este CPF/CNPJ já está cadastrado para outro Cliente");
+            }
+
+            if (!clienteModel.Isento && 
+                (clienteModel.InscricaoEstadualPessoaFisica || clienteModel.TipoPessoa == TipoPessoaEnum.Juridica) 
+                && ExisteInscricaoEstadual(clienteModel.InscricaoEstadual))
+            {
+                erros.Add("Esta Inscrição Estadual já está cadastrada para outro Cliente");
+            }
+
+            if (erros.Count > 0)
+            {
+                var stringErro = "ErroCadastro;" + JsonSerializer.Serialize(erros);
+                throw new Exception(stringErro);
+            }
+
+            _appDbContext.Clientes.Add(clienteModel);
             _appDbContext.SaveChanges();
         }
     }

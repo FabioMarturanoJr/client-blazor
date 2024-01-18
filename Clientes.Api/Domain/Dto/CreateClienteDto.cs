@@ -51,7 +51,7 @@ public class CadastroClienteValidations : AbstractValidator<CreateClienteDto>
 
         RuleFor(x => x.Email).NotEmpty().WithMessage("Email Obrigatório")
             .Must(x => x.EmailValido()).WithMessage("Email deve ser válido")
-            .Must(x => !clienteService.ExisteEmail(x)).WithMessage("Email Já cadastrado")
+            // .Must(x => !clienteService.ExisteEmail(x)).WithMessage("Email Já cadastrado")
             .MaximumLength(150);
 
         RuleFor(x => x.Telefone).NotEmpty().WithMessage("Telefone Obrigatório")
@@ -61,17 +61,17 @@ public class CadastroClienteValidations : AbstractValidator<CreateClienteDto>
 
         RuleFor(x => x.Cpf).NotEmpty().WithMessage("Cpf Obrigatório")
             .Must(x => x.RemoveCaracterEspecial()?.Length == 11).WithMessage("Cpf deve conter 11 caracteres")
-            .Must(x => !clienteService.ExisteCpfCnpj(x.RemoveCaracterEspecial())).WithMessage("Cpf Já cadastrado")
+            // .Must(x => !clienteService.ExisteCpfCnpj(x.RemoveCaracterEspecial())).WithMessage("Cpf Já cadastrado")
             .When(x => x.Cpf != null || x.TipoPessoa == TipoPessoaEnum.Fisica.ToString("g"));
 
         RuleFor(x => x.Cnpj).NotEmpty().WithMessage("Cnpj Obrigatório")
             .Must(x => x.RemoveCaracterEspecial()?.Length == 14).WithMessage("Cnpj deve conter 14 caracteres")
-            .Must(x => !clienteService.ExisteCpfCnpj(x.RemoveCaracterEspecial())).WithMessage("Cnpj Já cadastrado")
+            // .Must(x => !clienteService.ExisteCpfCnpj(x.RemoveCaracterEspecial())).WithMessage("Cnpj Já cadastrado")
             .When(x => x.Cnpj != null || x.TipoPessoa == TipoPessoaEnum.Juridica.ToString("g"));
 
         RuleFor(x => x.InscricaoEstadual).NotEmpty().WithMessage("InscricaoEstadual Obrigatório")
             .Must(x => x.RemoveCaracterEspecial()?.Length == 12).WithMessage("InscricaoEstadual deve conter 12 caracteres")
-            .Must(x => !clienteService.ExisteInscricaoEstadual(x)).WithMessage("Cnpj Já Inscricao Estadual")
+            // .Must(x => !clienteService.ExisteInscricaoEstadual(x)).WithMessage("Cnpj   Inscricao Estadual")
             .When(x => !x.Isento && (x.TipoPessoa == TipoPessoaEnum.Juridica.ToString("g") || x.InscricaoEstadualPessoaFisica));
 
         RuleFor(x => x.Genero).NotEmpty().WithMessage("Genero Obrigatório")

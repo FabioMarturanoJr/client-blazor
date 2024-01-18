@@ -32,8 +32,8 @@ namespace Clientes.Api.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     InscricaoEstadual = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    InscricaoEstadualPessoaFisica = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    Isento = table.Column<bool>(type: "tinyint(1)", nullable: true),
+                    InscricaoEstadualPessoaFisica = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Isento = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Genero = table.Column<int>(type: "int", nullable: true),
                     DataNascimento = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Bloqueado = table.Column<bool>(type: "tinyint(1)", nullable: false),

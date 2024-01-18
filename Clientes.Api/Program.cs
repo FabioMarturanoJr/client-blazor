@@ -1,3 +1,4 @@
+using Blazored.Toast;
 using Clientes.Api.Components;
 using Clientes.Api.Infrastructure;
 using Clientes.Api.Service;
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Services
 builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddBlazoredToast();
 
 var app = builder.Build();
 

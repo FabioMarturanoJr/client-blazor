@@ -11,8 +11,8 @@ public class Cliente
     public TipoPessoaEnum TipoPessoa { get; set; }
     public string CpfCnpj { get; set; }// se existe
     public string? InscricaoEstadual { get; set; }// se existe
-    public bool? InscricaoEstadualPessoaFisica { get; set; }
-    public bool? Isento { get; set; }
+    public bool InscricaoEstadualPessoaFisica { get; set; }
+    public bool Isento { get; set; }
     public GeneroEnum? Genero { get; set; }
     public DateTime? DataNascimento { get; set; }
     public bool Bloqueado { get; set; }
