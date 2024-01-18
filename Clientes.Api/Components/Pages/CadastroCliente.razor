@@ -1,4 +1,4 @@
-﻿@page "/cadastrarCliente"
+﻿@page "/cadastrar-cliente"
 @using Clientes.Api.Domain.Dto
 @using Clientes.Api.Domain.Enum
 @using Clientes.Api.Service
@@ -13,30 +13,6 @@
 @rendermode InteractiveServer
 
 <h2>Cadastro de Clientes</h2>
-
-@if (ExisteEmail)
-{
-    <br />
-    <p>Existe Email</p>
-    <button class="btn btn-secondary" @onclick="@(() => ExisteEmail = false)">Ok</button>
-    <br />
-}
-
-@if (ExisteCpfCnpj)
-{
-    <br />
-    <p>Existe CpfCnpj</p>
-    <button class="btn btn-secondary" @onclick="@(() => ExisteCpfCnpj = false)">Ok</button>
-    <br />
-}
-
-@if (ExisteInscricaoEstadual)
-{
-    <br />
-    <p>Existe InscricaoEstadual</p>
-    <button class="btn btn-secondary" @onclick="@(() => ExisteInscricaoEstadual = false)">Ok</button>
-    <br />
-}
 
 <EditForm Model="@ClienteModel" OnValidSubmit="@AdicionarCliente">
     <FluentValidationValidator />
@@ -123,10 +99,11 @@
         <InputText @bind-Value="ClienteModel.Senha" class="form-control" id="Senha" />
         <ValidationMessage For="@(() => ClienteModel.Senha)" />
         <label for="ConfirmaSenha">Confirmar Senha:</label>
-        <InputText @bind-Value="ClienteModel.ConfirmaSenha" class="form-control" id="ConfirmaSenha" />
+        <InputText @bind-Value="ClienteModel.ConfirmaSenha" class="form-control" id="ConfirmaSenha"/>
         <ValidationMessage For="@(() => ClienteModel.ConfirmaSenha)" />
 
     </div>
+    <br/>
     <div class="form-group">
         <input type="submit" class="btn btn-primary" value="Salvar" />
         <NavLink class="btn btn-danger" href="">
@@ -144,24 +121,21 @@
 
     private void AdicionarCliente()
     {
-        if (!ExisteDadosRepitidos())
+
+        try
         {
             clientService.CadastraCliente(ClienteModel);
             NavigationManager.NavigateTo("/");
         }
+        catch (Exception)
+        {
+            
+            throw;
+        }
+
     }
 
-    private bool ExisteDadosRepitidos()
-    {
-        ExisteEmail = clientService.ExisteEmail(ClienteModel.Email);
-        ExisteCpfCnpj = clientService.ExisteCpfCnpj(ClienteModel.TipoPessoa == TipoPessoaEnum.Fisica.ToString("g") ? 
-            ClienteModel.Cpf.RemoveCaracterEspecial() : ClienteModel.Cnpj.RemoveCaracterEspecial());
-        if (ClienteModel.InscricaoEstadual != null)
-        {
-            ExisteInscricaoEstadual = clientService.ExisteInscricaoEstadual(ClienteModel.InscricaoEstadual.RemoveCaracterEspecial());
-        }
-        return ExisteEmail && ExisteCpfCnpj && ExisteInscricaoEstadual;
-    }
+
 }
 
 

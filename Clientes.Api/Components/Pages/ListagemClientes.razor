@@ -1,52 +1,55 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 @using Clientes.Api.Domain.Filters
 @using Clientes.Api.Domain.Model
 @using Clientes.Api.Service
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using System.Text.Json.Serialization
 @using Newtonsoft.Json
-@rendermode InteractiveServer
 @inject IClienteService clientService
 
 <PageTitle>ListagemClientes</PageTitle>
 
 <div>
-    <p>
+    <p style="display: inline;">
         Consulte os seus Clientes cadastrados na
         sua Loja ou realize o cadastro de novos Cliente.
     </p>
-    <NavLink class="btn btn-primary" href="cadastrarCliente">
+    <NavLink class="btn btn-primary" href="cadastrar-cliente" style="display: inline-block; margin-left: 10px;">
         Adicionar Cliente
     </NavLink>
 </div>
-<br />
 <button class="btn btn-secondary" @onclick="MostrarFiltros">Filtrar</button>
 <br />
 
 @if (filtros)
 {
+    <br />
     <EditForm Model="@ModelFiltros" OnSubmit="@Filtrar">
-        <InputText Placeholder="Nome ou Razão Social do Cliente" @bind-Value="ModelFiltros.NomeRazao" />
-        <InputText Placeholder="E-mail do Cliente" @bind-Value="ModelFiltros.Email" />
-        <InputText Placeholder="Telefone do Cliente" @bind-Value="ModelFiltros.Telefone" />
-        <DateRangePicker 
-            class="form-control form-control-sm" 
-            @bind-StartDate="ModelFiltros.DataCadastroInicio" 
-            @bind-EndDate="ModelFiltros.DataCadastroFim" 
-            placeholder="Selecione uma data ou período" />
-        <label>
-            Cliente Bloqueado
-            <InputSelect @bind-Value="ModelFiltros.Bloqueado">
-                <option value=false>Não</option>
-                <option value=true>Sim</option>
-            </InputSelect>
-        </label>
-        <br />
-        <button class="btn btn-secondary" @onclick="limparFiltros">limpar filtros</button>
-        <input type="submit" class="btn btn-secondary" value="Aplicar Filtros" />
+        <div class="form-group">
+            <InputText Placeholder="Nome ou Razão Social do Cliente" @bind-Value="ModelFiltros.NomeRazao" class="form-control form-control-sm" style="" />
+            <InputText Placeholder="E-mail do Cliente" @bind-Value="ModelFiltros.Email" class="form-control form-control-sm" />
+            <InputText Placeholder="Telefone do Cliente" @bind-Value="ModelFiltros.Telefone" class="form-control form-control-sm" />
+            <DateRangePicker 
+                class="form-control form-control-sm" 
+                @bind-StartDate="ModelFiltros.DataCadastroInicio" 
+                @bind-EndDate="ModelFiltros.DataCadastroFim" 
+                placeholder="Selecione uma data ou período" />
+            <label>
+                Cliente Bloqueado
+                <InputSelect @bind-Value="ModelFiltros.Bloqueado">
+                    <option value=false>Não</option>
+                    <option value=true>Sim</option>
+                </InputSelect>
+            </label>
+            <br />
+            <button class="btn btn-secondary" @onclick="limparFiltros">limpar filtros</button>
+            <input type="submit" class="btn btn-secondary" value="Aplicar Filtros" />
+        </div>
     </EditForm>
 }
 
+<br />
 <QuickGrid Items="Clientes.AsQueryable()" Pagination="pagination">
     <PropertyColumn Property="c => c.NomeRazao"></PropertyColumn>
     <PropertyColumn Property="c => c.Email"></PropertyColumn>
@@ -58,7 +61,9 @@
         </div>
     </TemplateColumn>
     <TemplateColumn Title="Acões">
-        <button class="btn btn-primary">Editar</button>
+        <NavLink class="btn btn-danger" href="@($"editar-cliente/{context.Id}")">
+            Editar
+        </NavLink>
     </TemplateColumn>
 </QuickGrid>
 
