@@ -28,17 +28,46 @@ namespace Clientes.Api.Migrations
                     b.Property<bool>("Bloqueado")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("CpfCnpj")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("DataNascimento")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("Genero")
+                        .HasColumnType("int");
+
+                    b.Property<string>("InscricaoEstadual")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool?>("InscricaoEstadualPessoaFisica")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool?>("Isento")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("NomeRazao")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Senha")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Telefone")
+                        .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int>("TipoPessoa")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Clientes.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class initialMigration : Migration
+    public partial class initialMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,14 +21,25 @@ namespace Clientes.Api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    NomeRazao = table.Column<string>(type: "longtext", nullable: true)
+                    NomeRazao = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "longtext", nullable: true)
+                    Email = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Telefone = table.Column<string>(type: "longtext", nullable: true)
+                    Telefone = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DataCadastro = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Bloqueado = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    TipoPessoa = table.Column<int>(type: "int", nullable: false),
+                    CpfCnpj = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    InscricaoEstadual = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    InscricaoEstadualPessoaFisica = table.Column<bool>(type: "tinyint(1)", nullable: true),
+                    Isento = table.Column<bool>(type: "tinyint(1)", nullable: true),
+                    Genero = table.Column<int>(type: "int", nullable: true),
+                    DataNascimento = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Bloqueado = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Senha = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {

@@ -1,10 +1,13 @@
 ﻿@page "/cadastrarCliente"
+@using Clientes.Api.Domain.Dto
 @using Clientes.Api.Domain.Enum
-@using Clientes.Api.Domain.Model
-@rendermode InteractiveServer
+@using Clientes.Api.Service
+@inject IClienteService clientService
 @inject NavigationManager NavigationManager
 @using Blazored.FluentValidation
 @using BlazorInputMask
+
+@rendermode InteractiveServer
 
 <h2>Cadastro de Clientes</h2>
 
@@ -107,12 +110,13 @@
 
 
 @code {
-    private CreateCliente ClienteModel = new CreateCliente();
+    private CreateClienteDto ClienteModel = new CreateClienteDto();
 
     private void AdicionarCliente()
     {
         if (TodosCamposPreenchidos())
         {
+            //
             NavigationManager.NavigateTo("/");
         }
     }

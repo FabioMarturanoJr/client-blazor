@@ -2,9 +2,9 @@
 using Clientes.Api.Extensions;
 using FluentValidation;
 
-namespace Clientes.Api.Domain.Model;
+namespace Clientes.Api.Domain.Dto;
 
-public class CreateCliente
+public class CreateClienteDto
 {
     public string? NomeRazao { get; set; }
     public string? Email { get; set; }// se existe
@@ -23,29 +23,31 @@ public class CreateCliente
     public string? ConfirmaSenha { get; set; }
 }
 
-public class CadastroClienteValidations : AbstractValidator<CreateCliente>
+public class CadastroClienteValidations : AbstractValidator<CreateClienteDto>
 {
     public CadastroClienteValidations()
     {
         RuleFor(x => x.NomeRazao).NotEmpty().WithMessage("NomeRazao Obrigatorio").MaximumLength(150);
 
-        RuleFor(x => x.Email).NotEmpty().WithMessage("Email Obrigatorio").MaximumLength(150);
+        RuleFor(x => x.Email).NotEmpty().WithMessage("Email Obrigatorio")
+            .Must(x => x.EmailValido()).WithMessage("Email deve ser válido")
+            .MaximumLength(150);
 
         RuleFor(x => x.Telefone).NotEmpty().WithMessage("Telefone Obrigatorio")
-            .Must(x => x.RemoveCaracterEspecial()?.Length == 11).WithMessage("Telefone Deve conter 11 caracteres");
+            .Must(x => x.RemoveCaracterEspecial()?.Length == 11).WithMessage("Telefone deve conter 11 caracteres");
 
         RuleFor(x => x.TipoPessoa).NotEmpty().WithMessage("TipoPessoa Obrigatorio");
 
         RuleFor(x => x.Cpf).NotEmpty().WithMessage("Cpf Obrigatorio")
-            .Must(x => x.RemoveCaracterEspecial()?.Length == 11).WithMessage("Cpf Deve conter 11 caracteres")
+            .Must(x => x.RemoveCaracterEspecial()?.Length == 11).WithMessage("Cpf deve conter 11 caracteres")
             .When(x => x.Cpf != null || x.TipoPessoa == TipoPessoa.Fisica.ToString("g"));
 
         RuleFor(x => x.Cnpj).NotEmpty().WithMessage("Cnpj Obrigatorio")
-            .Must(x => x.RemoveCaracterEspecial()?.Length == 14).WithMessage("Cnpj Deve conter 14 caracteres")
+            .Must(x => x.RemoveCaracterEspecial()?.Length == 14).WithMessage("Cnpj deve conter 14 caracteres")
             .When(x => x.Cnpj != null || x.TipoPessoa == TipoPessoa.Juridica.ToString("g"));
 
         RuleFor(x => x.InscricaoEstadual).NotEmpty().WithMessage("InscricaoEstadual Obrigatorio")
-            .Must(x => x.RemoveCaracterEspecial()?.Length == 12).WithMessage("InscricaoEstadual Deve conter 12 caracteres")
+            .Must(x => x.RemoveCaracterEspecial()?.Length == 12).WithMessage("InscricaoEstadual deve conter 12 caracteres")
             .When(x => !x.Isento && (x.TipoPessoa == TipoPessoa.Juridica.ToString("g") || x.InscricaoEstadualPessoaFisica));
 
         RuleFor(x => x.Genero).NotEmpty().WithMessage("Genero Obrigatorio")
