@@ -24,7 +24,7 @@ para subir o banco é nescessário roda o comando `dotnet ef database update` na
 
 ### `Script`
 
-segue `query` caso queria criar a tabela manualmente:
+`query` caso queria criar a tabela manualmente:
 
 ```sql
 
