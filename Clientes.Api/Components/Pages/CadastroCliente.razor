@@ -2,14 +2,41 @@
 @using Clientes.Api.Domain.Dto
 @using Clientes.Api.Domain.Enum
 @using Clientes.Api.Service
+@using Clientes.Api.Extensions
+
 @inject IClienteService clientService
 @inject NavigationManager NavigationManager
+
 @using Blazored.FluentValidation
 @using BlazorInputMask
 
 @rendermode InteractiveServer
 
 <h2>Cadastro de Clientes</h2>
+
+@if (ExisteEmail)
+{
+    <br />
+    <p>Existe Email</p>
+    <button class="btn btn-secondary" @onclick="@(() => ExisteEmail = false)">Ok</button>
+    <br />
+}
+
+@if (ExisteCpfCnpj)
+{
+    <br />
+    <p>Existe CpfCnpj</p>
+    <button class="btn btn-secondary" @onclick="@(() => ExisteCpfCnpj = false)">Ok</button>
+    <br />
+}
+
+@if (ExisteInscricaoEstadual)
+{
+    <br />
+    <p>Existe InscricaoEstadual</p>
+    <button class="btn btn-secondary" @onclick="@(() => ExisteInscricaoEstadual = false)">Ok</button>
+    <br />
+}
 
 <EditForm Model="@ClienteModel" OnValidSubmit="@AdicionarCliente">
     <FluentValidationValidator />
@@ -39,7 +66,7 @@
         </InputSelect>
         <ValidationMessage For="@(() => ClienteModel.TipoPessoa)" />
     </div>
-    @if (ClienteModel.TipoPessoa == TipoPessoa.Fisica.ToString("g"))
+    @if (ClienteModel.TipoPessoa == TipoPessoaEnum.Fisica.ToString("g"))
     {
         <div class="form-group">
             <label for="Cpf">CPF do Cliente:</label>
@@ -47,7 +74,7 @@
             <ValidationMessage For="@(() => ClienteModel.Cpf)" />
         </div>
     }
-    @if (ClienteModel.TipoPessoa == TipoPessoa.Juridica.ToString("g"))
+    @if (ClienteModel.TipoPessoa == TipoPessoaEnum.Juridica.ToString("g"))
     {
         <div class="form-group">
             <label for="Cnpj">CNPJ do Cliente:</label>
@@ -64,7 +91,7 @@
         <InputMask @bind-Value="ClienteModel.InscricaoEstadual" class="form-control" data-mask="000.000.000-000" id="InscricaoEstadual" disabled="@ClienteModel.Isento" />
         <ValidationMessage For="@(() => ClienteModel.InscricaoEstadual)" />
     </div>
-    @if (ClienteModel.TipoPessoa == TipoPessoa.Fisica.ToString("g"))
+    @if (ClienteModel.TipoPessoa == TipoPessoaEnum.Fisica.ToString("g"))
     {
         <label for="InscricaoEstadualPessoaFisica">Inscrição estadual para Pessoa Física:</label>
         <input type="checkbox" @bind-value="ClienteModel.InscricaoEstadualPessoaFisica" id="InscricaoEstadualPessoaFisica" disabled="@ClienteModel.Isento" />
@@ -111,19 +138,29 @@
 
 @code {
     private CreateClienteDto ClienteModel = new CreateClienteDto();
+    private bool ExisteEmail = false;
+    private bool ExisteCpfCnpj = false;
+    private bool ExisteInscricaoEstadual = false;
 
     private void AdicionarCliente()
     {
-        if (TodosCamposPreenchidos())
+        if (!ExisteDadosRepitidos())
         {
-            //
+            clientService.CadastraCliente(ClienteModel);
             NavigationManager.NavigateTo("/");
         }
     }
 
-    private bool TodosCamposPreenchidos()
+    private bool ExisteDadosRepitidos()
     {
-        return false;
+        ExisteEmail = clientService.ExisteEmail(ClienteModel.Email);
+        ExisteCpfCnpj = clientService.ExisteCpfCnpj(ClienteModel.TipoPessoa == TipoPessoaEnum.Fisica.ToString("g") ? 
+            ClienteModel.Cpf.RemoveCaracterEspecial() : ClienteModel.Cnpj.RemoveCaracterEspecial());
+        if (ClienteModel.InscricaoEstadual != null)
+        {
+            ExisteInscricaoEstadual = clientService.ExisteInscricaoEstadual(ClienteModel.InscricaoEstadual.RemoveCaracterEspecial());
+        }
+        return ExisteEmail && ExisteCpfCnpj && ExisteInscricaoEstadual;
     }
 }
 

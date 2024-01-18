@@ -1,6 +1,6 @@
 ﻿namespace Clientes.Api.Domain.Enum;
 
-public enum Genero
+public enum GeneroEnum
 {
     Masculino, Feminino, Outro
 }

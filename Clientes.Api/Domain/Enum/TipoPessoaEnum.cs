@@ -1,6 +1,6 @@
 ﻿namespace Clientes.Api.Domain.Enum;
 
-public enum TipoPessoa
+public enum TipoPessoaEnum
 {
     Fisica, Juridica
 }

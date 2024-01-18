@@ -1,4 +1,5 @@
-﻿using Clientes.Api.Domain.Filters;
+﻿using Clientes.Api.Domain.Dto;
+using Clientes.Api.Domain.Filters;
 using Clientes.Api.Domain.Model;
 using Clientes.Api.Infrastructure;
 
@@ -40,6 +41,43 @@ namespace Clientes.Api.Service
                 query = query.Where(c => c.DataCadastro <= clienteFiltros.DataCadastroFim);
             }
             return [.. query];
+        }
+
+        public bool ExisteEmail(string? email)
+        {
+            if (email == null)
+            {
+                return false;
+            }
+            var cliente = _appDbContext.Clientes.FirstOrDefault(c => c.Email.ToLower() == email.ToLower());
+            return cliente != null;
+        }
+
+        public bool ExisteCpfCnpj(string? cpfCnpj)
+        {
+            if (cpfCnpj == null)
+            {
+                return false;
+            }
+            var cliente = _appDbContext.Clientes.FirstOrDefault(c => c.CpfCnpj == cpfCnpj);
+            return cliente != null;
+        }
+
+        public bool ExisteInscricaoEstadual(string? inscricaoEstadual)
+        {
+            if (inscricaoEstadual == null)
+            {
+                return false;
+            }
+            var cliente = _appDbContext.Clientes.FirstOrDefault(c => c.InscricaoEstadual != null 
+                && c.InscricaoEstadual == inscricaoEstadual);
+            return cliente != null;
+        }
+
+        public void CadastraCliente(CreateClienteDto clienteDto)
+        {
+            _appDbContext.Clientes.Add((Cliente)clienteDto);
+            _appDbContext.SaveChanges();
         }
     }
 }

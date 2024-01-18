@@ -27,7 +27,6 @@ namespace Clientes.Api.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Telefone = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DataCadastro = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     TipoPessoa = table.Column<int>(type: "int", nullable: false),
                     CpfCnpj = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -39,7 +38,8 @@ namespace Clientes.Api.Migrations
                     DataNascimento = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Bloqueado = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Senha = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DataCadastro = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
