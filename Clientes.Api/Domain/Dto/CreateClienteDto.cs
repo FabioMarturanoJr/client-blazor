@@ -9,12 +9,12 @@ namespace Clientes.Api.Domain.Dto;
 public class CreateClienteDto
 {
     public string NomeRazao { get; set; }
-    public string Email { get; set; }// se existe
+    public string Email { get; set; }
     public string Telefone { get; set; }
     public string TipoPessoa { get; set; }
-    public string? Cpf { get; set; }// se existe
-    public string? Cnpj { get; set; }// se existe
-    public string? InscricaoEstadual { get; set; }// se existe
+    public string? Cpf { get; set; }
+    public string? Cnpj { get; set; }
+    public string? InscricaoEstadual { get; set; }
     public bool InscricaoEstadualPessoaFisica { get; set; }
     public bool Isento { get; set; }
     public string? Genero { get; set; }
@@ -45,7 +45,7 @@ public class CreateClienteDto
 
 public class CadastroClienteValidations : AbstractValidator<CreateClienteDto>
 {
-    public CadastroClienteValidations(IClienteService clienteService)
+    public CadastroClienteValidations()
     {
         RuleFor(x => x.NomeRazao).NotEmpty().WithMessage("Nome/Razao Obrigatório").MaximumLength(150);
 

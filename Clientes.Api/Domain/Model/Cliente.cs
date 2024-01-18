@@ -6,11 +6,11 @@ public class Cliente
 {
     public int Id { get; set; }
     public string NomeRazao { get; set; }
-    public string Email { get; set; }// se existe
+    public string Email { get; set; }
     public string Telefone { get; set; }
     public TipoPessoaEnum TipoPessoa { get; set; }
-    public string CpfCnpj { get; set; }// se existe
-    public string? InscricaoEstadual { get; set; }// se existe
+    public string CpfCnpj { get; set; }
+    public string? InscricaoEstadual { get; set; }
     public bool InscricaoEstadualPessoaFisica { get; set; }
     public bool Isento { get; set; }
     public GeneroEnum? Genero { get; set; }
