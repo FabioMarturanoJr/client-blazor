@@ -40,6 +40,26 @@ public class CreateClienteDto
             Senha = dto.Senha,
             DataCadastro = DateTime.Now,
         };
+
+    public static explicit operator CreateClienteDto(Cliente modal) =>
+        new()
+        {
+            NomeRazao = modal.NomeRazao,
+            Email = modal.Email,
+            Telefone = modal.Telefone,
+            TipoPessoa = modal.TipoPessoa.ToString("g"),
+            Cpf = modal.TipoPessoa == TipoPessoaEnum.Fisica ? modal.CpfCnpj : null,
+            Cnpj = modal.TipoPessoa == TipoPessoaEnum.Juridica ? modal.CpfCnpj : null,
+            InscricaoEstadual = modal.InscricaoEstadual,
+            InscricaoEstadualPessoaFisica = modal.InscricaoEstadualPessoaFisica,
+            Isento = modal.Isento,
+            Genero = modal.TipoPessoa == TipoPessoaEnum.Fisica ? modal.Genero!.Value.ToString("g") : null,
+            DataNascimento = modal.DataNascimento,
+            Bloqueado = modal.Bloqueado,
+            Senha = modal.Senha,
+            ConfirmaSenha = modal.Senha
+        };
+
 }
 
 

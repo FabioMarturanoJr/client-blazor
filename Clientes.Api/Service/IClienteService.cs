@@ -6,9 +6,8 @@ namespace Clientes.Api.Service;
 
 public interface IClienteService
 {
-    List<Cliente> ListarClientes(ClienteFiltros clienteFiltros);
-    bool ExisteEmail(string? email);
-    bool ExisteCpfCnpj(string? cpfCnpj);
-    bool ExisteInscricaoEstadual(string? inscricaoEstadual);
+	CreateClienteDto BuscarPorId(int id);
+	List<Cliente> ListarClientes(ClienteFiltros clienteFiltros);
     public void CadastraCliente(CreateClienteDto clienteDto);
+    public void EditarCliente(CreateClienteDto Cliente, int ClienteId);
 }

@@ -1,11 +1,14 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+
 @using Clientes.Api.Domain.Filters
 @using Clientes.Api.Domain.Model
 @using Clientes.Api.Service
+
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using System.Text.Json.Serialization
 @using Newtonsoft.Json
+
 @inject IClienteService clientService
 
 <PageTitle>ListagemClientes</PageTitle>
@@ -73,6 +76,8 @@
     PaginationState pagination = new PaginationState { ItemsPerPage = 20 };
     private bool filtros;
     private List<Cliente> Clientes = new();
+    private ClienteFiltros ModelFiltros { get; set; } = new ClienteFiltros();
+
     private void MostrarFiltros()
     {
         filtros = !filtros;
@@ -91,7 +96,6 @@
         CarregarDados();
         MostrarFiltros();
     }
-    private ClienteFiltros ModelFiltros { get; set; } = new ClienteFiltros();
     private void CarregarDados()
     {
         var clientes = clientService.ListarClientes(ModelFiltros);

@@ -1,20 +1,19 @@
 ﻿@page "/cadastrar-cliente"
+@rendermode InteractiveServer
+
+@using Clientes.Api.Components.Shared
 @using Clientes.Api.Domain.Dto
 @using Clientes.Api.Domain.Enum
 @using Clientes.Api.Service
 @using Clientes.Api.Extensions
 
-@inject IClienteService clientService
-@inject NavigationManager NavigationManager
-@inject IToastService toastService
-
 @using Blazored.Toast.Configuration
-@using Blazored.FluentValidation
-@using BlazorInputMask
 @using Newtonsoft.Json
 @using System.Text
 
-@rendermode InteractiveServer
+@inject IClienteService clientService
+@inject NavigationManager NavigationManager
+@inject IToastService toastService
 
 <BlazoredToasts Position="ToastPosition.TopRight"
                 Timeout="10"
@@ -24,117 +23,16 @@
                 ShowProgressBar="true" />
 
 <h2>Cadastro de Clientes</h2>
-
-<EditForm Model="@ClienteModel" OnValidSubmit="@AdicionarCliente">
-    <FluentValidationValidator />
-    <div class="form-group">
-        <label for="NomeRazao">Nome do Cliente/Razão Social:</label>
-        <InputText @bind-Value="ClienteModel.NomeRazao" class="form-control" id="NomeRazao" />
-        <ValidationMessage For="@(() => ClienteModel.NomeRazao)" />
-    </div>
-    <div class="form-group">
-        <label for="Email">E-Mail:</label>
-        <InputText @bind-Value="ClienteModel.Email" class="form-control" id="Email" />
-        <ValidationMessage For="@(() => ClienteModel.Email)" />
-
-    </div>
-    <div class="form-group">
-        <label for="Telefone">Telefone:</label>
-        <InputMask @bind-Value="ClienteModel.Telefone" class="form-control" data-mask="(00) 00000-0000" id="Telefone" />
-        <ValidationMessage For="@(() => ClienteModel.Telefone)" />
-    </div>
-    <h4>Informações Pessoais</h4>
-    <div class="form-group">
-        <label for="TipoPessoa">Tipo de Pessoa:</label>
-        <InputSelect @bind-Value="ClienteModel.TipoPessoa" class="form-select" id="TipoPessoa">
-            <option value=null>Selecione Tipo de Pessoa</option>
-            <option value="Fisica">Fisica</option>
-            <option value="Juridica">Juridica</option>
-        </InputSelect>
-        <ValidationMessage For="@(() => ClienteModel.TipoPessoa)" />
-    </div>
-    @if (ClienteModel.TipoPessoa == TipoPessoaEnum.Fisica.ToString("g"))
-    {
-        <div class="form-group">
-            <label for="Cpf">CPF do Cliente:</label>
-            <InputMask @bind-Value="ClienteModel.Cpf" class="form-control" data-mask="000.000.000-00" id="Cpf" />
-            <ValidationMessage For="@(() => ClienteModel.Cpf)" />
-        </div>
-    }
-    @if (ClienteModel.TipoPessoa == TipoPessoaEnum.Juridica.ToString("g"))
-    {
-        <div class="form-group">
-            <label for="Cnpj">CNPJ do Cliente:</label>
-            <InputMask @bind-Value="ClienteModel.Cnpj" class="form-control" data-mask="00.000.000/0000-00" id="Cnpj" />
-            <ValidationMessage For="@(() => ClienteModel.Cnpj)" />
-        </div>
-    }
-    <div class="form-group">
-        <label for="Isento">Isento:</label>
-        <input type="checkbox" @bind-value="ClienteModel.Isento" id="Isento" />
-    </div>
-    <div class="form-group">
-        <label for="InscricaoEstadual">Inscrição Estadual:</label>
-        <InputMask @bind-Value="ClienteModel.InscricaoEstadual" class="form-control" data-mask="000.000.000-000" id="InscricaoEstadual" disabled="@ClienteModel.Isento" />
-        <ValidationMessage For="@(() => ClienteModel.InscricaoEstadual)" />
-    </div>
-    @if (ClienteModel.TipoPessoa == TipoPessoaEnum.Fisica.ToString("g"))
-    {
-        <label for="InscricaoEstadualPessoaFisica">Inscrição estadual para Pessoa Física:</label>
-        <input type="checkbox" @bind-value="ClienteModel.InscricaoEstadualPessoaFisica" id="InscricaoEstadualPessoaFisica" disabled="@ClienteModel.Isento" />
-        <div class="form-group">
-            <label for="Genero">Genero:</label>
-            <InputSelect @bind-Value="ClienteModel.Genero" class="form-select" id="Genero">
-                <option value=null>Selecione o Genero</option>
-                <option value="Masculino">Masculino</option>
-                <option value="Feminino">Feminino</option>
-                <option value="Outro">Outro</option>
-            </InputSelect>
-            <ValidationMessage For="@(() => ClienteModel.Genero)" />
-        </div>
-        <div class="form-group">
-            <label for="DataNascimento">Data de Nascimento:</label>
-            <InputDate @bind-Value="ClienteModel.DataNascimento" class="form-control" id="DataNascimento" />
-            <ValidationMessage For="@(() => ClienteModel.DataNascimento)" />
-        </div>
-    }
-    <div class="form-group">
-        <label for="Bloqueado">Cliente Bloqueado:</label>
-        <InputSelect @bind-Value="ClienteModel.Bloqueado" class="form-select" id="Bloqueado">
-            <option value=false>Não</option>
-            <option value=true>Sim</option>
-        </InputSelect>
-    </div>
-    <div class="form-group">
-        <label for="Senha">Senha:</label>
-        <InputText @bind-Value="ClienteModel.Senha" class="form-control" id="Senha" />
-        <ValidationMessage For="@(() => ClienteModel.Senha)" />
-        <label for="ConfirmaSenha">Confirmar Senha:</label>
-        <InputText @bind-Value="ClienteModel.ConfirmaSenha" class="form-control" id="ConfirmaSenha"/>
-        <ValidationMessage For="@(() => ClienteModel.ConfirmaSenha)" />
-
-    </div>
-    <br/>
-    <div class="form-group">
-        <input type="submit" class="btn btn-primary" value="Salvar" />
-        <NavLink class="btn btn-danger" href="">
-            Cancelar
-        </NavLink>
-    </div>
-</EditForm>
-
+<ClientForm Cliente="@ClienteDto" GerenciarCliente="@AdicionarCliente" />
 
 @code {
-    private CreateClienteDto ClienteModel = new CreateClienteDto();
-    private bool ExisteEmail = false;
-    private bool ExisteCpfCnpj = false;
-    private bool ExisteInscricaoEstadual = false;
+    private CreateClienteDto ClienteDto = new CreateClienteDto();
 
     private void AdicionarCliente()
     {
         try
         {
-            clientService.CadastraCliente(ClienteModel);
+            clientService.CadastraCliente(ClienteDto);
             NavigationManager.NavigateTo("/");
         }
         catch (Exception ex)
@@ -147,6 +45,10 @@
                 {
                     toastService.ShowError(Encoding.UTF8.GetString(Encoding.Default.GetBytes(error)));
                 }
+            } 
+            else
+            {
+                toastService.ShowError(ex.Message);
             }
         }
     }

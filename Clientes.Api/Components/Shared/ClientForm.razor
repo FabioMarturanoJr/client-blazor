@@ -1,0 +1,118 @@
+﻿@using Clientes.Api.Domain.Dto
+@using Clientes.Api.Domain.Enum
+@using Clientes.Api.Service
+
+@using BlazorInputMask
+@using Newtonsoft.Json
+@using System.Text
+
+<EditForm Model="@Cliente" OnValidSubmit="@GerenciarCliente">
+    <FluentValidationValidator />
+    <div class="form-group">
+        <label for="NomeRazao">Nome do Cliente/Razão Social:</label>
+        <InputText @bind-Value="Cliente.NomeRazao" class="form-control" id="NomeRazao" />
+        <ValidationMessage For="@(() => Cliente.NomeRazao)" />
+    </div>
+    <div class="form-group">
+        <label for="Email">E-Mail:</label>
+        <InputText @bind-Value="Cliente.Email" class="form-control" id="Email" />
+        <ValidationMessage For="@(() => Cliente.Email)" />
+
+    </div>
+    <div class="form-group">
+        <label for="Telefone">Telefone:</label>
+        <InputMask @bind-Value="Cliente.Telefone" class="form-control" data-mask="(00) 00000-0000" id="Telefone" />
+        <ValidationMessage For="@(() => Cliente.Telefone)" />
+    </div>
+    <h4>Informações Pessoais</h4>
+    <div class="form-group">
+        <label for="TipoPessoa">Tipo de Pessoa:</label>
+        <InputSelect @bind-Value="Cliente.TipoPessoa" class="form-select" id="TipoPessoa">
+            <option value=null>Selecione Tipo de Pessoa</option>
+            <option value="Fisica">Fisica</option>
+            <option value="Juridica">Juridica</option>
+        </InputSelect>
+        <ValidationMessage For="@(() => Cliente.TipoPessoa)" />
+    </div>
+    @if (Cliente.TipoPessoa == TipoPessoaEnum.Fisica.ToString("g"))
+    {
+        <div class="form-group">
+            <label for="Cpf">CPF do Cliente:</label>
+            <InputMask @bind-Value="Cliente.Cpf" class="form-control" data-mask="000.000.000-00" id="Cpf" />
+            <ValidationMessage For="@(() => Cliente.Cpf)" />
+        </div>
+    }
+    @if (Cliente.TipoPessoa == TipoPessoaEnum.Juridica.ToString("g"))
+    {
+        <div class="form-group">
+            <label for="Cnpj">CNPJ do Cliente:</label>
+            <InputMask @bind-Value="Cliente.Cnpj" class="form-control" data-mask="00.000.000/0000-00" id="Cnpj" />
+            <ValidationMessage For="@(() => Cliente.Cnpj)" />
+        </div>
+    }
+    <div class="form-group">
+        <label for="Isento">Isento:</label>
+        <input type="checkbox" @bind-value="Cliente.Isento" id="Isento" />
+    </div>
+    <div class="form-group">
+        <label for="InscricaoEstadual">Inscrição Estadual:</label>
+        <InputMask @bind-Value="Cliente.InscricaoEstadual" class="form-control" data-mask="000.000.000-000" id="InscricaoEstadual" disabled="@Cliente.Isento" />
+        <ValidationMessage For="@(() => Cliente.InscricaoEstadual)" />
+    </div>
+    @if (Cliente.TipoPessoa == TipoPessoaEnum.Fisica.ToString("g"))
+    {
+        <label for="InscricaoEstadualPessoaFisica">Inscrição estadual para Pessoa Física:</label>
+        <input type="checkbox" @bind-value="Cliente.InscricaoEstadualPessoaFisica" id="InscricaoEstadualPessoaFisica" disabled="@Cliente.Isento" />
+        <div class="form-group">
+            <label for="Genero">Genero:</label>
+            <InputSelect @bind-Value="Cliente.Genero" class="form-select" id="Genero">
+                <option value=null>Selecione o Genero</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Feminino">Feminino</option>
+                <option value="Outro">Outro</option>
+            </InputSelect>
+            <ValidationMessage For="@(() => Cliente.Genero)" />
+        </div>
+        <div class="form-group">
+            <label for="DataNascimento">Data de Nascimento:</label>
+            <InputDate @bind-Value="Cliente.DataNascimento" class="form-control" id="DataNascimento" />
+            <ValidationMessage For="@(() => Cliente.DataNascimento)" />
+        </div>
+    }
+    <div class="form-group">
+        <label for="Bloqueado">Cliente Bloqueado:</label>
+        <InputSelect @bind-Value="Cliente.Bloqueado" class="form-select" id="Bloqueado">
+            <option value=false>Não</option>
+            <option value=true>Sim</option>
+        </InputSelect>
+    </div>
+    <div class="form-group">
+        <label for="Senha">Senha:</label>
+        <InputText @bind-Value="Cliente.Senha" class="form-control" id="Senha" />
+        <ValidationMessage For="@(() => Cliente.Senha)" />
+        <label for="ConfirmaSenha">Confirmar Senha:</label>
+        <InputText @bind-Value="Cliente.ConfirmaSenha" class="form-control" id="ConfirmaSenha"/>
+        <ValidationMessage For="@(() => Cliente.ConfirmaSenha)" />
+
+    </div>
+    <br/>
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Salvar" />
+        <NavLink class="btn btn-danger" href="">
+            Cancelar
+        </NavLink>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public CreateClienteDto Cliente { get; set; }
+
+    [Parameter]
+    public Action GerenciarCliente { get; set; }
+
+    private void InvokeParentMethod()
+    {
+        GerenciarCliente?.Invoke();
+    }
+}

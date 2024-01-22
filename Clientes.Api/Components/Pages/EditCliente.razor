@@ -1,0 +1,83 @@
+﻿@page "/editar-cliente/{ClienteId:int}"
+@rendermode InteractiveServer
+
+@using Clientes.Api.Components.Shared
+@using Clientes.Api.Domain.Dto
+@using Clientes.Api.Service
+
+@using Blazored.Toast.Configuration
+@using Newtonsoft.Json
+@using System.Text
+
+@inject IClienteService clientService
+@inject NavigationManager NavigationManager
+@inject IToastService toastService
+
+<BlazoredToasts Position="ToastPosition.TopRight"
+				Timeout="10"
+				IconType="IconType.Material"
+				SuccessIcon="done_outline"
+				WarningIcon="warning"
+				ShowProgressBar="true" />
+
+<h3>Editar de Cliente</h3>
+@if (Cliente != null)
+{
+	<ClientForm Cliente="@Cliente" GerenciarCliente="@AtualizarCliente" />
+}
+
+@code {
+	[Parameter]
+	public int ClienteId { get; set; }
+
+	private CreateClienteDto? Cliente { get; set; }
+	private string? ErroOnInicialize { get; set; }
+	private bool CriaCliente = false;
+
+	private void AtualizarCliente()
+	{
+		try
+		{
+			clientService.EditarCliente(Cliente!, ClienteId);
+			NavigationManager.NavigateTo("/");
+		}
+		catch (Exception ex)
+		{
+			if (ex.Message.Contains("ErroEdicao"))
+			{
+				var jsonErroString = ex.Message.Split(";")[1..];
+				var errors = JsonConvert.DeserializeObject<List<string>>(jsonErroString[0]);
+				foreach (var error in errors!)
+				{
+					toastService.ShowError(Encoding.UTF8.GetString(Encoding.Default.GetBytes(error)));
+				}
+			}
+			else
+			{
+				toastService.ShowError(ex.Message);
+			}
+		}
+	}
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		if (ErroOnInicialize != null)
+		{
+			toastService.ShowError(ErroOnInicialize);
+		}
+		base.OnAfterRender(firstRender);
+	}
+
+	protected override void OnInitialized()
+	{
+		try
+		{
+			Cliente = clientService.BuscarPorId(ClienteId);
+
+		}
+		catch (Exception ex)
+		{
+			ErroOnInicialize = ex.Message;
+		}
+	}
+}

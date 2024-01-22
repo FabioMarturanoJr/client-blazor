@@ -18,4 +18,20 @@ public class Cliente
     public bool Bloqueado { get; set; }
     public string Senha { get; set; }
     public DateTime DataCadastro { get; set; }
+
+    public void AtualizarDadosCliente(Cliente dadosNovos)
+    {
+        NomeRazao = dadosNovos.NomeRazao;
+        Email = dadosNovos.Email;
+        Telefone = dadosNovos.Telefone;
+        TipoPessoa = dadosNovos.TipoPessoa;
+        CpfCnpj = dadosNovos.CpfCnpj;
+        InscricaoEstadual = dadosNovos.InscricaoEstadual;
+        InscricaoEstadualPessoaFisica = dadosNovos.InscricaoEstadualPessoaFisica;
+        Isento = dadosNovos.Isento;
+        Genero = dadosNovos.Genero;
+        DataNascimento = dadosNovos.DataNascimento;
+        Bloqueado = dadosNovos.Bloqueado;
+    }
 }
+

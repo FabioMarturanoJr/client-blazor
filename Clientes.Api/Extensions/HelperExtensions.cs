@@ -12,7 +12,7 @@ namespace Clientes.Api.Extensions
             && Regex.IsMatch(email, "^([0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$");
 
         public static TEnum ConvertEnum<TEnum>(this string stringEnum) where TEnum : struct
-            => Enum.TryParse("Active", out TEnum convertedEnum) ? convertedEnum : default;
+            => Enum.TryParse(stringEnum, out TEnum convertedEnum) ? convertedEnum : default;
         
     }
 }
