@@ -4,12 +4,23 @@
 @using Clientes.Api.Domain.Filters
 @using Clientes.Api.Domain.Model
 @using Clientes.Api.Service
+@using Clientes.Api.Extensions
 
+@using Blazored.Toast.Configuration
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using System.Text.Json.Serialization
 @using Newtonsoft.Json
 
 @inject IClienteService clientService
+@inject IModalService modalService
+@inject IToastService toastService
+
+<BlazoredToasts Position="ToastPosition.TopRight"
+                Timeout="10"
+                IconType="IconType.Material"
+                SuccessIcon="done_outline"
+                WarningIcon="warning"
+                ShowProgressBar="true" />
 
 <PageTitle>ListagemClientes</PageTitle>
 
@@ -22,7 +33,7 @@
         Adicionar Cliente
     </NavLink>
 </div>
-<button class="btn btn-secondary" @onclick="MostrarFiltros">Filtrar</button>
+<button class="btn btn-secondary" @onclick="MostrarFiltros">Mostrar Filtros</button>
 <br />
 
 @if (filtros)
@@ -41,13 +52,14 @@
             <label>
                 Cliente Bloqueado
                 <InputSelect @bind-Value="ModelFiltros.Bloqueado">
+                    <option value=null selected>Selecione</option>
                     <option value=false>Não</option>
                     <option value=true>Sim</option>
                 </InputSelect>
             </label>
             <br />
+            <input type="submit" class="btn btn-primary" value="Aplicar Filtros" />
             <button class="btn btn-secondary" @onclick="limparFiltros">limpar filtros</button>
-            <input type="submit" class="btn btn-secondary" value="Aplicar Filtros" />
         </div>
     </EditForm>
 }
@@ -56,17 +68,20 @@
 <QuickGrid Items="Clientes.AsQueryable()" Pagination="pagination">
     <PropertyColumn Property="c => c.NomeRazao"></PropertyColumn>
     <PropertyColumn Property="c => c.Email"></PropertyColumn>
-    <PropertyColumn Property="c => c.Telefone"></PropertyColumn>
-    <PropertyColumn Property="c => c.DataCadastro"></PropertyColumn>
+    <PropertyColumn Property="c => c.Telefone.FormatarStringTelefone()"></PropertyColumn>
+    <PropertyColumn Property="c => c.DataCadastro.FormatDataddMMYY()"></PropertyColumn>
     <TemplateColumn Title="Bloqueado">
         <div>
             <input type="checkbox" checked="@context.Bloqueado" disabled />
         </div>
     </TemplateColumn>
     <TemplateColumn Title="Acões">
-        <NavLink class="btn btn-danger" href="@($"editar-cliente/{context.Id}")">
+        <NavLink class="btn btn-warning" href="@($"editar-cliente/{context.Id}")">
             Editar
         </NavLink>
+        <button class="btn btn-danger" @onclick="@(() => OnShowModalClick(context.Id, context.NomeRazao))">
+            Apagar
+        </button>
     </TemplateColumn>
 </QuickGrid>
 
@@ -103,6 +118,28 @@
         {
             Clientes = clientes;
         }
+    }
+
+    private async Task OnShowModalClick(int id, string nomeRazao)
+    {
+        var parameters = new ModalParameters().Add(nameof(Confirm.ClienteNomeRazao), nomeRazao);
+
+        var moviesModal = modalService.Show<Confirm>("Confirm Delete", parameters);
+        var result = await moviesModal.Result;
+
+        if (result.Confirmed)
+        {
+            try
+            {
+                clientService.ApagarClientePorId(id);
+            }
+            catch (Exception ex)
+            {
+                toastService.ShowError(ex.Message);
+            }
+            CarregarDados();
+        }
+        
     }
 
     protected override void OnInitialized()

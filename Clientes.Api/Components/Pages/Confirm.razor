@@ -1,0 +1,25 @@
+﻿<div class="modal" tabindex="-1" style="display:block">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="Cancel"></button>
+            </div>
+            <div class="modal-body">
+                <p>Confima apagar Cliente <b>@ClienteNomeRazao</b> ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal" @onclick="Continue">Sim</button>
+                <button type="button" class="btn btn-primary" @onclick="Cancel">Não</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    [Parameter] public string? ClienteNomeRazao { get; set; }
+
+    private async Task Cancel() => await BlazoredModal.CancelAsync();
+    private async Task Continue() => await BlazoredModal.CloseAsync();
+}

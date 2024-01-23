@@ -10,4 +10,5 @@ public interface IClienteService
 	List<Cliente> ListarClientes(ClienteFiltros clienteFiltros);
     public void CadastraCliente(CreateClienteDto clienteDto);
     public void EditarCliente(CreateClienteDto Cliente, int ClienteId);
+    public void ApagarClientePorId(int ClienteId);
 }

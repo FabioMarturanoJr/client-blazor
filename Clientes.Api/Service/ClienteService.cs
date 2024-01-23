@@ -136,5 +136,14 @@ namespace Clientes.Api.Service
 			_appDbContext.Update(clienteOld);
             _appDbContext.SaveChanges();
 		}
-	}
+
+        public void ApagarClientePorId(int ClienteId)
+        {
+            var cliente = _appDbContext.Clientes.FirstOrDefault(x => x.Id == ClienteId)
+                ?? throw new Exception("Usuario Não Encontrado");
+
+            _appDbContext.Clientes.Remove(cliente);
+            _appDbContext.SaveChanges();
+        }
+    }
 }

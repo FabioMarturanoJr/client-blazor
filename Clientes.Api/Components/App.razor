@@ -11,6 +11,8 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <script src="_content/BlazorDateRangePicker/clickAndPositionHandler.js"></script>
     <link rel="stylesheet" href="_content/BlazorDateRangePicker/daterangepicker.min.css" />
+    <link rel="stylesheet" href="_content/Blazored.Modal/blazored-modal.css" />
+    <script src="_content/Blazored.Modal/blazored-modal.js"></script>
     <HeadOutlet />
     <script src="_content/BlazorInputMask/Main.js"></script>
     <script src="_content/BlazorInputMask/IMask.js"></script>
@@ -18,6 +20,7 @@
 
 <body>
     <Routes />
+    <CascadingBlazoredModal @rendermode="InteractiveServer"/>
     <script src="_framework/blazor.web.js"></script>
 </body>
 

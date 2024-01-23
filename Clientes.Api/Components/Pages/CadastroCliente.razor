@@ -39,8 +39,8 @@
         {
             if (ex.Message.Contains("ErroCadastro"))
             {
-                var jsonErroString = ex.Message.Split(";")[1..];
-                var errors = JsonConvert.DeserializeObject<List<string>>(jsonErroString[0]);
+                var jsonErroString = ex.Message.Split(";")[1];
+                var errors = JsonConvert.DeserializeObject<List<string>>(jsonErroString);
                 foreach (var error in errors!)
                 {
                     toastService.ShowError(Encoding.UTF8.GetString(Encoding.Default.GetBytes(error)));

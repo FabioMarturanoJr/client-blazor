@@ -13,6 +13,9 @@ namespace Clientes.Api.Extensions
 
         public static TEnum ConvertEnum<TEnum>(this string stringEnum) where TEnum : struct
             => Enum.TryParse(stringEnum, out TEnum convertedEnum) ? convertedEnum : default;
-        
+
+        public static string FormatarStringTelefone(this string telefone) => Regex.Replace(telefone, @"(\d{2})(\d{5})(\d{4})", "($1) $2-$3");
+
+        public static string FormatDataddMMYY(this DateTime data) => data.ToString("dd/MM/yyyy");
     }
 }
