@@ -7,5 +7,5 @@ public class ClienteFiltros
     public string? Telefone { get; set; }
     public DateTimeOffset? DataCadastroInicio { get; set; }
     public DateTimeOffset? DataCadastroFim { get; set; }
-    public bool? Bloqueado { get; set; }
+    public bool? Bloqueado { get; set; } = null;
 }
