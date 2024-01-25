@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  clientes-api:
+    image: clientes-api
+    container_name: clientes-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+
+  mysql:
+    image: mysql/mysql-server
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - /mysql-data:/var/lib/mysql-db
+    ports:
+      - "3306:3306"

@@ -48,7 +48,15 @@ namespace Clientes.Api.Service
             {
                 query = query.Where(c => c.DataCadastro <= clienteFiltros.DataCadastroFim);
             }
-            return [.. query];
+            try
+            {
+                return [.. query];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return [];
+            }
         }
 
         public bool ExisteEmail(string? email, int? id)
