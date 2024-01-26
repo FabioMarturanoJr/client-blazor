@@ -1,7 +1,7 @@
 docker build . --tag clientes-api:latest
-docker-compose up
+docker-compose up --detach
 
-docker exec -it mysql mysql -u root -p
+docker exec -it mysql-db mysql -u root -p
 update mysql.user set host='%' where user='root';
 FLUSH PRIVILEGES;
 
